@@ -1,0 +1,71 @@
+<!-- @format -->
+
+<sqlite>
+  <style>
+    textarea[name="sql"] {
+      margin-top: 0px;
+      margin-bottom: 0px;
+      height: 335px;
+      width: 100%;
+      padding: 0.8em;
+      border: 1px solid rgba(34, 36, 38, 0.15);
+    }
+  </style>
+
+  <sidebar>
+    <h2>Sqlite Workbench</h2>
+    <textarea name="sql">{ state.initialSql }</textarea>
+    <button onclick="{ onSql }">RUN</button>
+    <div class="ui segment">
+      <template if="{ state.result }">
+        <json-node label="root" data="{ state.result }"></json-node>
+      </template>
+    </div>
+  </sidebar>
+
+  <script>
+    import utils from "../../model/utils.js";
+    import sidebar from "../layout/sidebar.riot";
+    import { register } from "riot";
+    import jsonNode from "../components/json-node.riot";
+    register("json-node", jsonNode);
+
+    const initialSql = `select * from test_table`;
+
+    export default {
+      components: {
+        sidebar,
+      },
+      state: {
+        result: null,
+        initialSql: initialSql,
+      },
+      async fetch(routeParams) {
+        return utils.fetchJson("/api/run-sql", {
+          sql: initialSql,
+        });
+      },
+      async onMounted() {
+        this.onUpdateProps(this.props, this.props.prefetchData);
+      },
+      async onUpdateProps(props, data) {
+        utils.setTitle("Sqlite Workbench");
+        if (!data) {
+          data = await this.fetch(props.routeParams);
+        }
+        this.update({ result: data });
+      },
+      async onSql() {
+        let data = new FormData();
+        data.append("sql", this.$('[name="sql"]').value);
+        const res = await fetch("/api/run-sql", {
+          method: "POST",
+          body: data,
+        }).then(async (res) => {
+          return res.json();
+        });
+        this.update({ result: res });
+      },
+    };
+  </script>
+</sqlite>

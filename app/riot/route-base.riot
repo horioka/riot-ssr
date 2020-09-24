@@ -1,0 +1,41 @@
+<!-- @format -->
+
+<route-base>
+  <router>
+    <route each="{ page in pages }" path="{ page.route }" data-is="{ page.is }">
+      <div
+        is="{ page.is }"
+        route-params="{ route.params }"
+        prefetch-data="{ prefetch() }"
+      ></div>
+    </route>
+  </router>
+
+  <script>
+    import { Router, Route, route } from "@riotjs/route";
+    import { pages, match } from "./route-list.js";
+    import utils from "../model/utils.js";
+    import { register } from "riot";
+
+    export default {
+      pages,
+      match,
+      components: {
+        Router,
+        Route,
+        ...pages.reduce((acc, cur) => {
+          acc[cur.is] = cur.component;
+          return acc;
+        }, {}),
+      },
+      prefetch() {
+        return utils.getPrefetchData();
+      },
+      onAsyncRendering() {
+        return new Promise((resolve, reject) => {
+          resolve();
+        });
+      },
+    };
+  </script>
+</route-base>

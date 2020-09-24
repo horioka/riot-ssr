@@ -1,0 +1,46 @@
+<!-- @format -->
+
+<index>
+  <sidebar>
+    <h2>SSR Example Index</h2>
+
+    <ul>
+      <li><a class="item" href="{ makePath('index') }">index</a></li>
+      <li>
+        <a class="item" href="{ makePath('sqlite') }">Sqlite Workbench</a>
+      </li>
+      <li>
+        <a class="item" href="{ makePath('square', { num: 2 }) }">square 2</a>
+      </li>
+      <li>
+        <a class="item" href="{ makePath('square', { num: 3 }) }">square 3</a>
+      </li>
+      <li>
+        <a class="item" href="{ makePath('square', { num: 5 }) }">square 5</a>
+      </li>
+      <li>
+        <a class="item" href="{ makePath('square', { num: 7 }) }">square 7</a>
+      </li>
+      <li>
+        <a class="item" href="{ makePath('square', { num: 11 }) }">square 11</a>
+      </li>
+    </ul>
+  </sidebar>
+
+  <script>
+    import utils from "../../model/utils.js";
+    import sidebar from "../layout/sidebar.riot";
+    import { makePath } from "../route-list.js";
+
+    export default {
+      components: {
+        sidebar,
+      },
+      onBeforeMount() {
+        this.makePath = makePath;
+        utils.setTitle(`SSR example index`);
+      },
+      onMounted() {},
+    };
+  </script>
+</index>

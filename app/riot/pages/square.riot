@@ -1,0 +1,78 @@
+<!-- @format -->
+
+<square>
+  <style>
+    .navi {
+      display: flex;
+    }
+    .navi div {
+      padding: 8px;
+    }
+  </style>
+
+  <sidebar>
+    <div>
+      <h2>Square { props.routeParams[0] } Page</h2>
+      <span>Result { state.result.data }</span>
+    </div>
+
+    <div class="navi">
+      <div>
+        <a
+          href="{ makePath('square', { num: Number(props.routeParams[0]) - 1 }) }"
+        >
+          prev
+        </a>
+      </div>
+      <div>
+        <a href="{ makePath('index') }">index</a>
+      </div>
+      <div>
+        <a
+          href="{ makePath('square', { num: Number(props.routeParams[0]) + 1 }) }"
+        >
+          next
+        </a>
+      </div>
+    </div>
+  </sidebar>
+
+  <script>
+    import utils from "../../model/utils.js";
+    import sidebar from "../layout/sidebar.riot";
+    import { makePath } from "../route-list.js";
+
+    export default {
+      components: {
+        sidebar,
+      },
+      state: {
+        result: "",
+      },
+      async fetch(routeParams) {
+        return utils.fetchJson("/api/square", {
+          value: Number(routeParams[0]),
+        });
+      },
+      onBeforeMount() {
+        this.makePath = makePath;
+      },
+      async onMounted() {
+        this.onUpdateProps(this.props, this.props.prefetchData);
+      },
+      async shouldUpdate(newProps, currentProps) {
+        // ルートの変更
+        if (newProps.routeParams[0] !== currentProps.routeParams[0]) {
+          this.onUpdateProps(newProps);
+        }
+      },
+      async onUpdateProps(props, data) {
+        utils.setTitle(`Squate ${props.routeParams[0]}`);
+        if (!data) {
+          data = await this.fetch(props.routeParams);
+        }
+        this.update({ result: data });
+      },
+    };
+  </script>
+</square>

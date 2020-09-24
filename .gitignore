@@ -1,0 +1,7 @@
+.vscode
+.history
+node_modules/
+storage/
+app/public/js/script.js
+!.gitkeep
+.env

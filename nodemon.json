@@ -1,0 +1,10 @@
+{
+  "restartable": "rs",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "ts,js,jsm,json",
+  "watch": ["app"],
+  "ignore": ["tests/**/*.ts"],
+  "exec": "babel-node ./app/backend/entry.js"
+}

@@ -1,0 +1,100 @@
+<!-- @format -->
+
+<sidebar>
+  <style>
+    .fiexd-button {
+      position: fixed;
+      left: 0;
+      top: 0;
+      margin: 0.5em;
+      z-index: 10;
+    }
+    .full-height {
+      padding: 1em 0;
+      min-height: 100vh;
+    }
+    .side-menu {
+      z-index: 2000 !important;
+      left: 0px;
+      transition: left 300ms !important;
+    }
+    .side-menu.slid-out {
+      left: -240px;
+    }
+  </style>
+
+  <div class="fiexd-button">
+    <button class="circular ui blue icon button" onclick="{ onMenu }">
+      <i class="bars icon"></i>
+    </button>
+  </div>
+
+  <div class="ui bottom attached">
+    <div
+      class="ui visible sidebar vertical inverted menu side-menu { state.visible ? '' : 'slid-out' }"
+    >
+      <a class="header item" onclick="{ onMenu }">
+        <i class="close icon"></i>
+        SSR example
+      </a>
+      <a class="item" href="/">
+        <i class="home icon"></i>
+        index
+      </a>
+      <a class="item" href="/sqlite">
+        <i class="database icon"></i>
+        Sqlite Workbench
+      </a>
+      <a class="item" href="/square/2">
+        <i class="calculator icon"></i>
+        square 2
+      </a>
+      <a class="item" href="/square/3">
+        <i class="calculator icon"></i>
+        square 3
+      </a>
+      <a class="item" href="/square/5">
+        <i class="calculator icon"></i>
+        square 5
+      </a>
+      <a class="item" href="/square/7">
+        <i class="calculator icon"></i>
+        square 7
+      </a>
+      <a class="item" href="/square/11">
+        <i class="calculator icon"></i>
+        square 11
+      </a>
+    </div>
+  </div>
+
+  <div class="ui container full-height">
+    <div
+      class="ui very light dimmer { state.visible ? 'active' : '' }"
+      onclick="{ onMenu }"
+    ></div>
+    <slot></slot>
+  </div>
+
+  <script>
+    import utils from "../../model/utils.js";
+
+    export default {
+      state: {
+        visible: false,
+      },
+      onBeforeUnmount() {
+        utils.setLayoutState("sidebar", this.state);
+      },
+      onBeforeMount() {
+        const state = utils.getLayoutState("sidebar");
+        if (state) {
+          this.state = state;
+        }
+      },
+      onMenu() {
+        this.update({ visible: !this.state.visible });
+      },
+    };
+  </script>
+</sidebar>
